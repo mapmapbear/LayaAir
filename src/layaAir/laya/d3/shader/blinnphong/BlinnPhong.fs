@@ -68,7 +68,6 @@ void main()
 {
     PixelParams pixel;
     getPixelParams(pixel);
-
     Surface surface;
     getBinnPhongSurfaceParams(surface, pixel);
 

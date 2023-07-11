@@ -76,6 +76,7 @@ export class RenderElementBatch {
                             instanceRenderElement.render = insOriElement.render;
                             instanceRenderElement.renderType = RenderElement.RENDERTYPE_INSTANCEBATCH;
                             //Geometry updaste
+                            // (instanceRenderElement._geometry.subMesh = insOriElement.render;
                             (instanceRenderElement._geometry as MeshInstanceGeometry).subMesh = (insOriElement._geometry as SubMesh);
                             instanceRenderElement.material = insOriElement.material;
                             instanceRenderElement.setTransform(null);

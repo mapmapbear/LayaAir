@@ -87,8 +87,8 @@ vec3 BlinnPhongLighting(const in Surface surface, const in PixelParams pixel)
     #endif // SPOTLIGHT
 
     vec3 giColor = BlinnPhongGI(surface, info);
-
-    return lightColor + giColor;
+	return lightColor;
+    // return lightColor + giColor;
 }
 
 #endif // BlinnPhongFrag_lib

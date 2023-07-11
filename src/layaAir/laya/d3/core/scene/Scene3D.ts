@@ -1137,8 +1137,11 @@ export class Scene3D extends Sprite implements ISubmit {
         //addQueue
         let list = this._cullPass.cullList;
         let element = list.elements;
+        
         for (let i: number = 0; i < list.length; i++) {
             let render = element[i];
+            //@ts-ignore
+            // if(render._mesh._subMeshes[0]._mesh == null) debugger;
             render.distanceForSort = Vector3.distance(render.bounds.getCenter(), cameraPos);//TODO:合并计算浪费,或者合并后取平均值
             var elements: RenderElement[] = render._renderElements;
             for (var j: number = 0, m: number = elements.length; j < m; j++)
