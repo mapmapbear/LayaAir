@@ -63,8 +63,8 @@ export class Pool {
     }
 
     /**
-     * 根据类名回收类的实例
-     * @param	instance 类的具体实例
+     * 根据类型创建对象
+     * @param	cls 类型
      */
     static createByClass<T>(cls: new () => T): T {
         return Pool.getItemByClass(Pool._getClassSign(cls), cls);
@@ -78,14 +78,12 @@ export class Pool {
      * @return 此类型标识的一个对象。
      */
     static getItemByClass<T>(sign: string, cls: new () => T): T {
-        if (!Pool._poolDic[sign]) return new cls();
-
-        var pool = Pool.getPoolBySign(sign);
-        if (pool.length) {
-            var rst = pool.pop();
-        } else {
+        let rst: any;
+        let pool = Pool.getPoolBySign(sign);
+        if (pool.length)
+            rst = pool.pop();
+        else
             rst = new cls();
-        }
         rst[Pool.POOLSIGN] = false;
         return rst;
     }

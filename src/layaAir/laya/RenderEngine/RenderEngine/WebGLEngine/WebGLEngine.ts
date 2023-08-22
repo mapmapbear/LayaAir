@@ -110,7 +110,7 @@ export class WebGLEngine implements IRenderEngine {
     private _GLParams: GLParams;
 
     //GL纹理生成
-    private _GLTextureContext: GLTextureContext|GL2TextureContext;
+    private _GLTextureContext: GLTextureContext | GL2TextureContext;
     //Gl Draw
     private _GLRenderDrawContext: GLRenderDrawContext;
 
@@ -233,6 +233,7 @@ export class WebGLEngine implements IRenderEngine {
         for (var i: number = 0; i < names.length; i++) {
             try {
                 gl = canvas.getContext(names[i], this._config);
+                // gl.drawingBufferColorSpace = "display-p3";
             } catch (e) {
             }
             if (gl) {
@@ -442,8 +443,7 @@ export class WebGLEngine implements IRenderEngine {
      * @internal
      */
     uploadUniforms(shader: GLShaderInstance, commandEncoder: CommandEncoder, shaderData: ShaderData, uploadUnTexture: boolean): number {
-        shader.bind();
-        shaderData.applyUBOData();
+        shaderData.applyUBO && shaderData.applyUBOData();
         var data: any = shaderData._data;
         var shaderUniform: any[] = commandEncoder.getArrayData();
         var shaderCall: number = 0;

@@ -534,13 +534,15 @@ export class GLTextureContext extends GLObject implements ITextureContext {
         }
     }
 
-    createTextureInternal(dimension: TextureDimension, width: number, height: number, format: TextureFormat, generateMipmap: boolean, sRGB: boolean): InternalTexture {
+    createTextureInternal(dimension: TextureDimension, width: number, height: number, format: TextureFormat, generateMipmap: boolean, sRGB: boolean, premultipliedAlpha: boolean): InternalTexture {
 
         // todo  一些format 不支持自动生成mipmap
 
         // todo  这个判断, 若纹理本身格式不支持？
         let useSRGBExt = this.isSRGBFormat(format) || (sRGB && this.supportSRGB(format, generateMipmap));
-
+        if(premultipliedAlpha){//预乘法和SRGB同时开启，会有颜色白边问题
+            useSRGBExt = false;
+        }
         let gammaCorrection = 1.0;
         if (!useSRGBExt && sRGB) {
             gammaCorrection = 2.2;
@@ -829,6 +831,19 @@ export class GLTextureContext extends GLObject implements ITextureContext {
             mipmapWidth = Math.max(1, mipmapWidth * 0.5);
             mipmapHeight = Math.max(1, mipmapHeight * 0.5);
         }
+
+        for (let index = ktxInfo.mipmapCount; index < texture.mipmapCount; index++) {
+            if (compressed) {
+                // todo
+            }
+            else {
+                gl.texImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, null);
+            }
+
+            mipmapWidth = Math.max(1, mipmapWidth * 0.5);
+            mipmapHeight = Math.max(1, mipmapHeight * 0.5);
+        }
+
         texture.gpuMemory = memory;//TODO 不太准
         this._engine._bindTexture(texture.target, null);
 
@@ -1134,6 +1149,22 @@ export class GLTextureContext extends GLObject implements ITextureContext {
                 dataOffset += 3 - ((imageSize + 3) % 4);
             }
 
+
+            mipmapWidth = Math.max(1, mipmapWidth * 0.5);
+            mipmapHeight = Math.max(1, mipmapHeight * 0.5);
+        }
+
+        for (let index = ktxInfo.mipmapCount; index < texture.mipmapCount; index++) {
+
+            for (let face = 0; face < 6; face++) {
+                let target = cubeFace[face];
+                if (compressed) {
+                    // todo
+                }
+                else {
+                    gl.texImage2D(target, index, internalFormat, mipmapWidth, mipmapHeight, 0, format, type, null);
+                }
+            }
 
             mipmapWidth = Math.max(1, mipmapWidth * 0.5);
             mipmapHeight = Math.max(1, mipmapHeight * 0.5);
